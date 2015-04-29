@@ -5,7 +5,7 @@ var taskConfig = {
 
 	component: {
 		name: 'Select',
-		less: 'less/default.less'
+		less: 'less/react-select.less'
 	},
 
 	example: {
