@@ -34,8 +34,8 @@ var Select = React.createClass({
 		matchPos: React.PropTypes.string,          // (any|start) match the start or entire string when filtering
 		matchProp: React.PropTypes.string,         // (any|label|value) which option property to filter on
 		inputProps: React.PropTypes.object,        // custom attributes for the Input (in the Select-control) e.g: {'data-foo': 'bar'}
-		allowCreate: React.PropTypes.bool,         // whether to allow creation of new entries
-		onAdd: React.PropTypes.func,		   // onAdd handler function(newValue, newValues) called when a new value is added before onChange, requires allowCreate = true
+		canAdd: React.PropTypes.bool,         // whether to allow creation of new entries
+		onAdd: React.PropTypes.func,		   // onAdd handler function(newValue, newValues) called when a new value is added before onChange, requires canAdd = true
 		/*
 		* Allow user to make option label clickable. When this handler is defined we should
 		* wrap label into <a>label</a> tag.
@@ -67,7 +67,7 @@ var Select = React.createClass({
 			matchPos: 'any',
 			matchProp: 'any',
 			inputProps: {},
-			allowCreate: false,
+			canAdd: false,
 			onAdd: undefined,
 			
 			onOptionLabelClick: undefined
@@ -242,7 +242,7 @@ var Select = React.createClass({
 		}
 		var newState = this.getStateFromValue(value);
 		newState.isOpen = false;
-		if(this.props.allowCreate) {
+		if(this.props.canAdd) {
 			// Find if the value was added
 			var inputValue = this.state.inputValue;
 			// Loop through the filtered options
@@ -307,7 +307,7 @@ var Select = React.createClass({
 	},
 
 	fireAddEvent: function(newState) {
-		if (newState.value !== this.state.value && this.props.onAdd && this.props.allowCreate) {
+		if (newState.value !== this.state.value && this.props.onAdd && this.props.canAdd) {
 			this.props.onAdd(newState.value, newState.values);
 		} 
 	},
@@ -406,7 +406,7 @@ var Select = React.createClass({
 			break;
 
 			case 188: // ,
-				if (this.props.allowCreate) {
+				if (this.props.canAdd) {
 					event.preventDefault();
 					event.stopPropagation();
 					this.selectFocusedOption();
@@ -546,7 +546,7 @@ var Select = React.createClass({
 	},
 
 	selectFocusedOption: function() {
-		if (this.props.allowCreate && !this.state.focusedOption) {
+		if (this.props.canAdd && !this.state.focusedOption) {
 			return this.selectValue(this.state.inputValue);
 		};
 		return this.selectValue(this.state.focusedOption);
@@ -626,7 +626,7 @@ var Select = React.createClass({
 			focusedValue = focusedValue == null ? this.state.filteredOptions[0] : focusedValue;
 		}
 		// Add the current value to the filtered options in last resort
-		if (this.props.allowCreate && !this.state.filteredOptions.length) {
+		if (this.props.canAdd && !this.state.filteredOptions.length) {
 			var inputValue = this.state.inputValue;
 			this.state.filteredOptions.push({
 				value: inputValue,
